@@ -110,7 +110,7 @@ class _DashboardControllerState extends State<DashboardController> {
           Text(
             title.toUpperCase(),
             style: TextStyle(
-              color: AppColors.palleteColor1,
+              color: AppColors.paletteColor1,
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -189,7 +189,7 @@ class _DashboardControllerState extends State<DashboardController> {
           Text(
             title.toUpperCase(),
             style: TextStyle(
-              color: AppColors.palleteColor1,
+              color: AppColors.paletteColor1,
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -268,7 +268,7 @@ class _DashboardControllerState extends State<DashboardController> {
           Text(
             title.toUpperCase(),
             style: TextStyle(
-              color: AppColors.palleteColor1,
+              color: AppColors.paletteColor1,
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),

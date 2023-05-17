@@ -75,7 +75,7 @@ class _SplashScreenControllerState extends State<SplashScreenController> {
                     Text(
                       'From',
                       style: TextStyle(
-                          color: AppColors.palleteColor1, fontSize: 8.0),
+                          color: AppColors.paletteColor1, fontSize: 8.0),
                     ),
                     const SizedBox(
                       height: 5,
@@ -83,7 +83,7 @@ class _SplashScreenControllerState extends State<SplashScreenController> {
                     Text(
                       'Notio Software Solutions',
                       style: TextStyle(
-                          color: AppColors.palleteColor1, fontSize: 8.0),
+                          color: AppColors.paletteColor1, fontSize: 8.0),
                     ),
                   ],
                 ),
