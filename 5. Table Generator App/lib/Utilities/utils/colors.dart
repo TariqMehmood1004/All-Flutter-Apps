@@ -43,8 +43,8 @@ class AppColors {
 
   static Color colorBox1 = const Color(0xFF2A2738);
 
-  static Color palleteColor = const Color(0xFF4a021a);
-  static Color palleteColor1 = const Color(0xFF260615);
+  static Color paletteColor = const Color(0xFF4a021a);
+  static Color paletteColor1 = const Color(0xFF260615);
 
   static Color colorBox2 = const Color(0xFFf3f4f9);
 }

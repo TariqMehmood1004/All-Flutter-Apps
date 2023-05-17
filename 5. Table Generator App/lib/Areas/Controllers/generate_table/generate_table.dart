@@ -103,7 +103,7 @@ class _GenerateTableControllerState extends State<GenerateTableController> {
                             Text(
                               '${widget.tableNumber.toString()} \t\t\t\t\t * \t\t\t\t\t $i \t\t\t\t\t = \t\t\t\t\t\t\t ${widget.tableNumber * i} ',
                               style: TextStyle(
-                                color: AppColors.palleteColor1,
+                                color: AppColors.paletteColor1,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
                               ),
