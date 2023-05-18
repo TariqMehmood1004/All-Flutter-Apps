@@ -49,9 +49,7 @@ class _DashboardControllerState extends State<DashboardController> {
                   ],
                 ),
                 InkWell(
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
                   onTap: () {
-                    // AudioCache().play('note1.wav');
                     AudioCache()
                         .play('audio/note${Random().nextInt(7) + 1}.wav');
                     setState(
@@ -75,9 +73,9 @@ class _DashboardControllerState extends State<DashboardController> {
                   },
                   child: Container(
                     width: 200.0,
-                    padding: const EdgeInsets.all(14.0),
+                    padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
-                      color: primaryColor,
+                      color: AppColors.blueLight,
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Center(

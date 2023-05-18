@@ -1,5 +1,0 @@
-
-
-class RandomTableGeneratorProvider with ChangeNotifier {
-
-}

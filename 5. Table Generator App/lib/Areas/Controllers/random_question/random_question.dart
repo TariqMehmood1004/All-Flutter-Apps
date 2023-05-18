@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:table_generator_app/Areas/Views/views.dart';
-
+import 'package:table_generator_app/Areas/Controllers/index.dart';
 import '../../../Utilities/utils/colors.dart';
 
 class RandomQuestionsGenerator extends StatefulWidget {
@@ -96,96 +95,112 @@ class _RandomQuestionsGeneratorState extends State<RandomQuestionsGenerator> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: AppColors.white,
-        body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SizedBox(
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    Container(
-                      width: 300,
-                      padding: const EdgeInsets.all(14.0),
-                      decoration: BoxDecoration(
-                        color: AppColors.black,
-                        borderRadius: BorderRadius.circular(7),
+          backgroundColor: AppColors.white,
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: AppColors.blueLight,
+            leading: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DashboardController(),
+                  ),
+                );
+              },
+              child: const Icon(
+                Icons.arrow_back_ios_new_sharp,
+              ),
+            ),
+          ),
+          body: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 100,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(
-                            'Generated Question from the table',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w300,
+                      Container(
+                        width: 300,
+                        padding: const EdgeInsets.all(14.0),
+                        decoration: BoxDecoration(
+                          color: AppColors.black,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              'Generated Question from the table',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: 350,
-                      padding: const EdgeInsets.all(12.0),
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 1.0, horizontal: 40.0),
-                      decoration: BoxDecoration(
-                        color: AppColors.transparent,
-                        borderRadius: BorderRadius.circular(8),
+                      const SizedBox(
+                        height: 10,
                       ),
-                      child: Row(
+                      Container(
+                        width: size.width,
+                        padding: const EdgeInsets.all(12.0),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 1.0, horizontal: 40.0),
+                        decoration: BoxDecoration(
+                          color: AppColors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${widget.tableNumber.toString()} \t\t\t *  \t\t\t\t ${randomValues.toString()} \t\t\t = \t\t\t _____ ',
+                              style: TextStyle(
+                                color: AppColors.paletteColor1,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 100,
+                      ),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${widget.tableNumber.toString()} \t\t\t *  \t\t\t\t ${randomValues.toString()} \t\t\t = \t\t\t _____ ',
-                            style: TextStyle(
-                              color: AppColors.paletteColor1,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: options.map((e) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: InkWell(
-                              overlayColor: MaterialStateProperty.all(
-                                  AppColors.transparent),
-                              onTap: () {
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStatePropertyAll(
+                                    AppColors.blueLight),
+                                overlayColor: MaterialStatePropertyAll(
+                                    AppColors.backgroundDark),
+                              ),
+                              onPressed: () {
                                 randomSounds();
                                 verifyNumber(e);
                               },
-                              child: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: AppColors.blueLight,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 17.0),
                                 child: Center(
                                     child: Text(
                                   e.toString(),
@@ -200,115 +215,29 @@ class _RandomQuestionsGeneratorState extends State<RandomQuestionsGenerator> {
                           );
                         }).toList(),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              width: double.infinity,
-              height: 100,
-              margin: const EdgeInsets.only(left: 30.0),
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: AppColors.transparent,
-                borderRadius: BorderRadius.circular(6.0),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      debugPrint('generated Quiz');
-                      randomSounds();
-                      setState(
-                        () {
-                          Timer(
-                            const Duration(milliseconds: 250),
-                            () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      MyViewsRoutes.dashboardController,
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
-                    child: Container(
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                            color: AppColors.blueLight,
-                            borderRadius: BorderRadius.circular(6.0)),
-                        child: Icon(
-                          Icons.arrow_back_ios_new_sharp,
-                          size: 14,
-                          color: AppColors.white,
-                        )),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: AppColors.blueLight,
+            onPressed: () {
+              setState(() {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (builder) => super.widget,
                   ),
-                  InkWell(
-                    onTap: () {
-                      debugPrint(
-                          '------------------------------Next Quiz---------------------------------');
-                      randomSounds();
-                      setState(
-                        () {
-                          randomSounds();
-                          Timer(
-                            const Duration(milliseconds: 250),
-                            () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => super.widget,
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                          color: AppColors.blueLight,
-                          borderRadius: BorderRadius.circular(6.0)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Next Question',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 14,
-                            color: AppColors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                );
+                randomSounds();
+              });
+            },
+            child: const Icon(
+              Icons.refresh_outlined,
             ),
-          ],
-        ),
-      ),
+          )),
     );
   }
 
