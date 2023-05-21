@@ -231,6 +231,7 @@ class _RandomQuestionsGeneratorState extends State<RandomQuestionsGenerator> {
                     builder: (builder) => super.widget,
                   ),
                 );
+                generateRandomTableNumber();
                 randomSounds();
               });
             },
