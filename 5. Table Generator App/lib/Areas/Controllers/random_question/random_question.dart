@@ -29,14 +29,14 @@ class _RandomQuestionsGeneratorState extends State<RandomQuestionsGenerator> {
 
   List<int> options = [];
 
+  int countDown = 5;
+
   @override
   void initState() {
     super.initState();
 
     generateRandomTableNumber();
-
     correctAnswer = widget.tableNumber * randomValues; // 10 * 12 = 120
-
     options = generateOptions();
   }
 
@@ -56,7 +56,7 @@ class _RandomQuestionsGeneratorState extends State<RandomQuestionsGenerator> {
 
     // Generate incorrect options
     while (options.length < 3) {
-      int option = random.nextInt(20) + 1;
+      int option = random.nextInt(100) + 1;
       if (!options.contains(option) && option != correctAnswer) {
         options.add(option);
       }
@@ -70,27 +70,34 @@ class _RandomQuestionsGeneratorState extends State<RandomQuestionsGenerator> {
     if (chosenNum == correctAnswer) {
       ShowDialogBox(context, 'Correct', 'You have chosen the correct number.',
           () {
-        generateRandomTableNumber();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => super.widget,
-          ),
-        );
-        randomSounds();
+        Navigator.of(context).pop();
+        moveToNextQuestion();
       });
     } else {
-      ShowDialogBox(context, 'Incorrect', 'You have chosen the wrong number.',
+      ShowDialogBox(context, 'Incorrect',
+          ' You have chosen the wrong number. \n Your correct answer will be ${correctAnswer.toString()}',
           () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => super.widget,
-          ),
-        );
-        randomSounds();
+        Navigator.of(context).pop();
+        moveToNextQuestion();
       });
     }
+  }
+
+  moveToNextQuestion() {
+    setState(() {
+      if (countDown > 1) {
+        generateRandomTableNumber();
+        correctAnswer = widget.tableNumber * randomValues; // 10 * 12 = 120
+        options = generateOptions();
+        countDown--;
+        randomSounds();
+      } else {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const DashboardController()));
+      }
+    });
   }
 
   @override
@@ -114,6 +121,16 @@ class _RandomQuestionsGeneratorState extends State<RandomQuestionsGenerator> {
               },
               child: const Icon(
                 Icons.arrow_back_ios_new_sharp,
+              ),
+            ),
+            title: Expanded(
+              child: Text(
+                '${countDown.toString()} Questions remaining',
+                style: TextStyle(
+                  color: AppColors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
@@ -225,14 +242,7 @@ class _RandomQuestionsGeneratorState extends State<RandomQuestionsGenerator> {
             backgroundColor: AppColors.blueLight,
             onPressed: () {
               setState(() {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (builder) => super.widget,
-                  ),
-                );
-                generateRandomTableNumber();
-                randomSounds();
+                moveToNextQuestion();
               });
             },
             child: const Icon(
