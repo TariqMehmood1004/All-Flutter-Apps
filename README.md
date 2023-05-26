@@ -1,6 +1,5 @@
 # All-Flutter-Apps
-
-## My all semester apps in flutter have been done. 
+ 
 
 ### 1. Xylophone app
 ### 2. Counter app
