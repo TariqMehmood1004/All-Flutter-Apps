@@ -95,7 +95,7 @@ class _RandomQuestionsGeneratorState extends State<RandomQuestionsGenerator> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const DashboardController()));
+                builder: (context) => const DashboardController(),),);
       }
     });
   }
@@ -123,14 +123,12 @@ class _RandomQuestionsGeneratorState extends State<RandomQuestionsGenerator> {
                 Icons.arrow_back_ios_new_sharp,
               ),
             ),
-            title: Expanded(
-              child: Text(
-                '${countDown.toString()} Questions remaining',
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                ),
+            title: Text(
+              '${countDown.toString()} Questions remaining',
+              style: TextStyle(
+                color: AppColors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
