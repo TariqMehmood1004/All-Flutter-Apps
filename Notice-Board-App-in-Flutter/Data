@@ -1,0 +1,59 @@
+
+// Sign in with different roles
+Future<UserCredential> signIn(String email, String password) async {
+  UserCredential userCredential =
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+    email: email,
+    password: password,
+  );
+  return userCredential;
+}
+
+// Insert product data based on user role
+void insertProduct(String roleName, String productName, double price) async {
+  // Get the current user
+  User? user = FirebaseAuth.instance.currentUser;
+
+  // Check if user is authenticated
+  if (user != null) {
+    // Get the Firestore instance
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Create a reference to the collection based on role
+    CollectionReference collectionRef =
+        firestore.collection('data').doc(roleName).collection('products');
+
+    // Create a new product document with auto-generated ID
+    DocumentReference documentRef = collectionRef.doc();
+
+    // Set the product data
+    await documentRef.set({
+      'name': productName,
+      'price': price,
+    });
+  } else {
+    print('User is not authenticated');
+  }
+}
+
+void main() async {
+  // Initialize Firebase
+  await initializeFirebase();
+
+  // Sign in with different roles
+  UserCredential adminCredential = await signIn('admin@example.com', 'password');
+  UserCredential userCredential = await signIn('user@example.com', 'password');
+
+  // Insert product data based on user role
+  if (adminCredential.user != null) {
+    // Insert products as admin
+    insertProduct('admin', 'Product A', 9.99);
+    insertProduct('admin', 'Product B', 19.99);
+  }
+
+  if (userCredential.user != null) {
+    // Insert products as user
+    insertProduct('user', 'Product C', 4.99);
+    insertProduct('user', 'Product D', 14.99);
+  }
+}
