@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../colors/contants.dart';
 import 'add_notifications.dart';
 import 'home_notifications.dart';
 
@@ -33,10 +34,26 @@ class _HomeScreenState extends State<DOOScreen> {
   }
 
   var _currentIndex = 0;
+  final _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        elevation: 0.23,
+        backgroundColor: AppColors.black,
+        onPressed: () {
+          showModalBox(
+            context,
+            "Search the Notifications",
+            _searchController,
+            "DooNotifications",
+            "SUBJECT"
+          );
+          _searchController.clear();
+        },
+        child: Icon(Icons.search_outlined, color: AppColors.cardBGColor,),
+      ),
       appBar: AppBar(
         backgroundColor: AppColors.white,
         elevation: 0,
@@ -45,15 +62,15 @@ class _HomeScreenState extends State<DOOScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children:  [
-              Text("Noticed Board".toUpperCase(), style: TextStyle(color: AppColors.primary, fontSize: 18, fontWeight: FontWeight.w600),),
+              Text("Noticed Board - DOO".toUpperCase(), style: TextStyle(color: AppColors.primary, fontSize: 18, fontWeight: FontWeight.w600),),
               IconButton(
                 color: AppColors.primary,
                 splashColor: AppColors.color2,
                 splashRadius: 22.0,
                 onPressed: () {
-                  debugPrint("Menu icon clicked.");
+                  logout(context);
                 },
-                icon: Icon(MdiIcons.menu, color: AppColors.primary,),
+                icon: Icon(MdiIcons.logout, color: AppColors.primary,),
               ),
             ],
           ),

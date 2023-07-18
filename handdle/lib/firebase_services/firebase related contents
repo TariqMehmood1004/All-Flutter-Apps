@@ -1,0 +1,234 @@
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously, avoid_types_as_parameter_names
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_sms_autofill/flutter_sms_autofill.dart';
+import 'package:handdle/Home/home_screen.dart';
+import 'package:handdle/models/users_model.dart';
+import 'package:intl/intl.dart';
+
+import '../Auth/otp_screen.dart';
+import '../Auth/signup.dart';
+import '../utils/constants.dart';
+
+class FirebaseServices {
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final firestore = FirebaseFirestore.instance;
+  static get firebaseUser => _auth.currentUser!;
+  static final time = DateTime.now().microsecondsSinceEpoch.toString();
+
+  static final userId = DateTime.now().microsecondsSinceEpoch.toString();
+
+  static String timeStamp =
+      DateFormat.yMMMEd().format(DateTime.now()).toString();
+
+  static String dateTime =
+      DateFormat.yMMMEd().format(DateTime.now()).toString();
+
+  static Future<bool> userExists() async {
+    return (await firestore.collection("users").doc(firebaseUser.uid).get())
+        .exists;
+  }
+
+  static Future<void> createUser(BuildContext context,
+      {String? phoneNumber, String? username}) async {
+    final user = ChatUserModel(
+      id: firebaseUser.uid,
+      name: username!,
+      phoneNumber: phoneNumber!,
+      about: "Hey, I'm using Handdle!",
+      image: "image path url",
+      createdAt: time,
+      lastActive: time,
+      isOnline: false,
+      pushToken: '',
+    );
+
+    await firestore
+        .collection("users")
+        .doc(firebaseUser.uid)
+        .set(user.toJson());
+
+    Constants.showToast('User created successfully!');
+  }
+
+  Future<void> verifyPhones(BuildContext context,
+      {String? phoneNumber, String? username}) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
+
+    await auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber!,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        UserCredential userCredential =
+            await auth.signInWithCredential(credential);
+        User? user = userCredential.user;
+
+        if (user != null) {
+          DateTime now = DateTime.now();
+
+          String timeStamp = DateFormat.yMMMEd().format(now).toString();
+
+          String id = DateTime.now().microsecondsSinceEpoch.toString();
+
+          await databaseReference.child('users/$id').set(
+                ChatUserModel(
+                  id: user.uid,
+                  phoneNumber: phoneNumber,
+                  name: username!,
+                  about: "Hey, I'm using Handdle!",
+                  image: 'Image path here',
+                  createdAt: timeStamp,
+                  lastActive: timeStamp,
+                  isOnline: false,
+                  pushToken: '',
+                ).toJson(),
+              );
+        }
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        // Verification failed
+        Constants.showToast('Verification failed: $e');
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        // Store the verification ID in a variable or database for later use
+        databaseReference
+            .child(phoneNumber)
+            .child(username!)
+            .set(verificationId);
+        Constants.navigateTo(
+          context,
+          OTPScreen(
+            verificationId: verificationId,
+            phoneNumber: phoneNumber,
+          ),
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        // Called when the auto-retrieval timeout has expired
+        // Store the verification ID in a variable or database for later use
+        databaseReference
+            .child(phoneNumber)
+            .child(username!)
+            .set(verificationId);
+
+        SmsAutoFill().listenForCode;
+      },
+      timeout: const Duration(seconds: 60), // Timeout duration for code input
+    );
+  }
+
+  Future<void> verifySentOTP(
+    BuildContext context, {
+    String? verificationId,
+    String? verifyOTPCodeController,
+    String? username,
+    String? phoneNumber,
+  }) async {
+    try {
+      if (verifyOTPCodeController!.length != 4) {
+        // Check if the OTP is exactly 4 digits long
+        Constants.showToast("Invalid OTP.");
+      }
+
+      final credential = PhoneAuthProvider.credential(
+        verificationId: verificationId!,
+        smsCode: verifyOTPCodeController.substring(0, 4),
+      );
+
+      await _auth.signInWithCredential(credential);
+
+      await storeUserData(phoneNumber: phoneNumber, username: username);
+
+      Constants.showToast("User logged in successfully!");
+
+      // Navigate to the desired screen after successful login
+    } on FirebaseAuthException catch (e) {
+      Constants.showToast(e.code.toString());
+    } catch (e) {
+      Constants.showToast("OTP verification failed: $e");
+    }
+  }
+
+  //
+  //
+  //
+  //
+  //
+
+  Future<void> verifySentOTPCode(
+    BuildContext context, {
+    String? verificationId,
+    String? verifyOTPCodeController,
+    String? phoneNumber,
+    String? username,
+  }) async {
+    try {
+      if (verifyOTPCodeController!.length != 4) {
+        // Check if the OTP is exactly 4 digits long
+        Constants.showToast("Invalid OTP.");
+      }
+
+      final credential = PhoneAuthProvider.credential(
+        verificationId: verificationId!,
+        smsCode: verifyOTPCodeController.substring(0, 4),
+      );
+
+      await _auth.signInWithCredential(credential);
+      await storeUserData(phoneNumber: phoneNumber, username: username);
+
+      Constants.showToast("User logged in successfully!");
+
+      // Navigate to the desired screen after successful login
+    } on FirebaseAuthException catch (e) {
+      Constants.showToast(e.code.toString());
+    } catch (e) {
+      Constants.showToast("OTP verification failed: $e");
+    }
+  }
+
+  Future<void> storeUserData({String? phoneNumber, String? username}) async {
+    final currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      final uid = currentUser.uid;
+      final userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(uid);
+      await userDocRef.set(
+        ChatUserModel(
+          id: currentUser.uid,
+          name: username!,
+          phoneNumber: phoneNumber!,
+          about: "Hey, I'm using Handdle!",
+          image: "Image path here",
+          createdAt: timeStamp,
+          lastActive: timeStamp,
+          isOnline: false,
+          pushToken: '',
+        ).toJson(),
+      );
+
+      Constants.showToast("$phoneNumber is created.");
+    }
+  }
+
+  static void isLogin(BuildContext context) {
+    final user = _auth.currentUser;
+
+    if (user != null) {
+      Constants.pushReplacementNavigateTo(context, const HomeScreen());
+    } else {
+      Constants.pushReplacementNavigateTo(context, const SignUp());
+    }
+  }
+
+  Future createUserAccountWithPhone(ChatUserModel userModel) async {
+    final docUser = FirebaseFirestore.instance.collection('users').doc();
+    userModel.id = docUser.id;
+
+    await docUser.set(userModel.toJson());
+    Constants.showToast("User created!");
+  }
+}

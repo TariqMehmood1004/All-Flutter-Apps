@@ -1,6 +1,9 @@
 
 
 import 'package:app/colors/colors.dart';
+import 'package:app/screens/users_screen/show_all_time_table_schedule.dart';
+import 'package:app/screens/users_screen/show_all_users.dart';
+import 'package:app/screens/users_screen/show_fyp.dart';
 import 'package:app/screens/users_screen/show_notices.dart';
 import 'package:app/screens/users_screen/show_time_table.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +22,19 @@ class _UsersHomeScreenState extends State<UsersHomeScreen> {
       decoration: BoxDecoration(
         color: AppColors.transparent,
       ),
-      child: const Column(
-        children: [
-          ShowTimeTableScreen(),
-          ShowNoticesScreen(),
-        ],
+      child: const SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            SizedBox(height: 20.0,),
+            ShowTimeTableScreen(),
+            SizedBox(height: 20.0,),
+            showUserAssignments(),
+            SizedBox(height: 20.0,),
+            ShowUserFYP(),
+            SizedBox(height: 20.0,),
+          ],
+        ),
       ),
     );
   }

@@ -56,16 +56,6 @@ class _HomeScreenState extends State<FYPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: FloatingActionButton.extended(
-        splashColor: AppColors.cardBGColor,
-        backgroundColor: AppColors.buttonColor,
-        focusElevation: 0,
-        elevation: 0,
-        onPressed: () {
-          logout();
-        },
-        label: Text("Logout", style: TextStyle(color: AppColors.primary),),
-      ),
       appBar: AppBar(
         backgroundColor: AppColors.white,
         elevation: 0,
@@ -80,9 +70,9 @@ class _HomeScreenState extends State<FYPScreen> {
                 splashColor: AppColors.color2,
                 splashRadius: 22.0,
                 onPressed: () {
-                  debugPrint("Menu icon clicked.");
+                  logout();
                 },
-                icon: Icon(MdiIcons.menu, color: AppColors.primary,),
+                icon: Icon(MdiIcons.logout, color: AppColors.primary,),
               ),
             ],
           ),
@@ -107,7 +97,6 @@ class _HomeScreenState extends State<FYPScreen> {
               title: const Text("Home Page"),
               selectedColor: Colors.purple,
             ),
-
 
             SalomonBottomBarItem(
               icon: const Icon(Icons.add),

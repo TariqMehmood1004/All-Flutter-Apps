@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1091874934317",
+    "project_id": "handdleapp-f3ebe",
+    "storage_bucket": "handdleapp-f3ebe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091874934317:android:bd95531dfc00b7e261f2a4",
+        "android_client_info": {
+          "package_name": "com.example.handdle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091874934317-1jecuc301s4suko5c9v8crn5bg6tbjjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1Bi9BAKaw8EW_2X9zxs0Hgr44cT7Ls1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091874934317-1jecuc301s4suko5c9v8crn5bg6tbjjd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

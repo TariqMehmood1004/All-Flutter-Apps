@@ -1,0 +1,25 @@
+floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        backgroundColor: AppColors.darkopacity,
+        overlayColor: AppColors.transparent,
+        children: [
+          SpeedDialChild(
+            child: const Icon(Icons.refresh),
+            label: 'Reset',
+            backgroundColor: AppColors.darkopacity,
+            foregroundColor: AppColors.white,
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.arrow_left_sharp),
+            label: 'Decrement',
+            backgroundColor: AppColors.darkopacity,
+            foregroundColor: AppColors.white,
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.add),
+            label: 'Increment',
+            backgroundColor: AppColors.darkopacity,
+            foregroundColor: AppColors.white,
+          ),
+        ],
+      ),

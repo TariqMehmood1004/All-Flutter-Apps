@@ -1,9 +1,10 @@
 import 'package:app/colors/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-
-// DooHomeNotifications
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import '../../colors/contants.dart';
+
 
 class DooHomeNotifications extends StatefulWidget {
   const DooHomeNotifications({super.key});
@@ -14,23 +15,23 @@ class DooHomeNotifications extends StatefulWidget {
 
 class _ShowAllTasksState extends State<DooHomeNotifications> {
 
-  final _taskCollection = FirebaseFirestore.instance.collection('Doo_Message');
+  final _taskCollection = FirebaseFirestore.instance.collection('DooNotifications');
 
   // Variables to store the task input values
-  final _emailController = TextEditingController();
-  final _roleController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _roleController.dispose();
+    _titleController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
-  void _deleteTask(String taskId) async {
+  void _deleteTask(String id) async {
     try {
-      await _taskCollection.doc(taskId).delete();
-      showSnackBar(msg: "Task deleted successfully.");
+      await _taskCollection.doc(id).delete();
+      showSnackBar(msg: "Project deleted successfully.");
     } on FirebaseAuthException catch (e) {
       showSnackBar(msg: e.code.toString());
     }
@@ -71,7 +72,7 @@ class _ShowAllTasksState extends State<DooHomeNotifications> {
               children: [
                 const SizedBox(height: 20.0,),
                 Text(
-                  'Edit User',
+                  'Edit Doo Notifications',
                   style: TextStyle(
                     color: AppColors.primary,
                     fontWeight:
@@ -81,12 +82,12 @@ class _ShowAllTasksState extends State<DooHomeNotifications> {
                 ),
                 const SizedBox(height: 5.0,),
                 TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
+                  controller: _titleController,
+                  decoration: const InputDecoration(labelText: 'Subject'),
                 ),
                 TextField(
-                  controller: _roleController,
-                  decoration: const InputDecoration(labelText: 'User Role'),
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(labelText: 'Message'),
                 ),
                 const SizedBox(height: 20.0,),
                 Row(
@@ -118,10 +119,10 @@ class _ShowAllTasksState extends State<DooHomeNotifications> {
                     ),
                     InkWell(
                       onTap: (){
-                        FirebaseFirestore.instance.collection("users").doc(userRole).update(
+                        FirebaseFirestore.instance.collection("DooNotifications").doc(userRole).update(
                             {
-                              'email': _emailController.text.trim(),
-                              'userRole': _roleController.text.trim()
+                              'SUBJECT': _titleController.text.trim(),
+                              'MESSAGE': _descriptionController.text.trim(),
                             }
                         );
                         showSnackBar(msg: "Successfully updated.");
@@ -156,21 +157,6 @@ class _ShowAllTasksState extends State<DooHomeNotifications> {
     );
   }
 
-  Future<void> blockUser(String userEmail, bool isBlocked) async {
-    try {
-      // Get the reference to the user document
-      DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userEmail);
-
-      // Update the 'isBlocked' field in Firestore
-      await userRef.update({'isBlocked': isBlocked});
-      showSnackBar(msg: 'User blocked $userEmail.');
-    } on FirebaseAuthException catch (e) {
-      // Handle any errors
-      showSnackBar(msg: 'Error blocking user: ${e.code.toString()}');
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -178,100 +164,109 @@ class _ShowAllTasksState extends State<DooHomeNotifications> {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.symmetric(horizontal: 17.0, vertical: 8.0),
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12.0),
-            decoration: BoxDecoration(
-              color: AppColors.transparent,
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            child: Text(
-              "My Active Notifications",
-              style: TextStyle(
-                color: AppColors.primary,
-                fontWeight: FontWeight.bold,
-                fontSize: 14.0,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(horizontal: 17.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12.0),
+              decoration: BoxDecoration(
+                color: AppColors.transparent,
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              child: Text(
+                "My Active Notifications",
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14.0,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 15.0,),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-            ),
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _taskCollection.snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            const SizedBox(height: 15.0,),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+              ),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _taskCollection.snapshots(),
+                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
 
-                if (snapshot.data!.docs.isEmpty) {
-                  return const Text('No tasks found.');
-                }
+                  if (snapshot.data!.docs.isEmpty) {
+                    return const Text('No data found.');
+                  }
 
-                return Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                      Map<String, dynamic> task = document.data() as Map<String, dynamic>;
-                      String fypTitle = task['FYP_Title'];
-                      String description = task['description'];
-                      String members = task['Members'];
-                      String supervisor = task['Supervisor'];
-                      String userId = task['userId'];
+                  return Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> task = document.data() as Map<String, dynamic>;
+                        String subject = task['SUBJECT'];
+                        String message = task['MESSAGE'];
 
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 2.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.buttonColor,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            fypTitle.toUpperCase(),
-                            style: TextStyle(
-                              color: AppColors.blueBlack,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14.0,
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 4.0),
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            color: generateRandomColor(),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              subject.toUpperCase(),
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 6.0,),
+                                Text(
+                                  "Description: \n$message",
+                                  style: TextStyle(
+                                    color: AppColors.secondary,
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 10.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            leading: IconButton(
+                              icon: Icon(Icons.edit_outlined, color: AppColors.primary),
+                              onPressed: () {
+                                _titleController.text = subject;
+                                _descriptionController.text = message;
+                                showModalBox(document.id);
+                              },
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete_outline, color: AppColors.primary),
+                              onPressed: () => _deleteTask(document.id),
                             ),
                           ),
-                          subtitle: Text(
-                            description,
-                            style: TextStyle(
-                              color: AppColors.secondary,
-                              fontWeight: FontWeight.w300,
-                              fontSize: 10.0,
-                            ),
-                          ),
-                          leading: IconButton(
-                            icon: Icon(Icons.edit_outlined, color: AppColors.primary),
-                            onPressed: () {
-                              showModalBox(document.id);
-                            },
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete_outline, color: AppColors.primary),
-                            onPressed: () => _deleteTask(document.id),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                );
-              },
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

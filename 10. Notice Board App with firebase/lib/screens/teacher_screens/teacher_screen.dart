@@ -4,6 +4,8 @@
 import 'package:app/colors/colors.dart';
 import 'package:app/screens/admin_screens/handle_users.dart';
 import 'package:app/screens/solomon_bottom_bar.dart';
+import 'package:app/screens/teacher_screens/add.dart';
+import 'package:app/screens/teacher_screens/notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -77,30 +79,17 @@ class _HomeScreenState extends State<TeacherScreen> {
               selectedColor: Colors.purple,
             ),
 
-            /// Likes
-            SalomonBottomBarItem(
-              icon: const Icon(Icons.favorite_border),
-              title: const Text("Likes"),
-              selectedColor: Colors.pink,
-            ),
 
             SalomonBottomBarItem(
               icon: const Icon(Icons.add),
-              title: const Text("Add"),
+              title: const Text("Add Assignment"),
               selectedColor: Colors.cyan ,
-            ),
-
-            /// Search
-            SalomonBottomBarItem(
-              icon: const Icon(Icons.search),
-              title: const Text("Search"),
-              selectedColor: Colors.orange,
             ),
 
             /// Profile
             SalomonBottomBarItem(
               icon: const Icon(Icons.supervised_user_circle_sharp),
-              title: const Text("Users"),
+              title: const Text("Students"),
               selectedColor: Colors.teal,
             ),
           ],
@@ -110,71 +99,8 @@ class _HomeScreenState extends State<TeacherScreen> {
   }
 
   List pages = [
-    Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 22.0),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-        ),
-        child: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('notices').snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Text('Error retrieving notices');
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-
-            List<DocumentSnapshot> notices = snapshot.data!.docs;
-
-            return ListView.builder(
-              itemCount: notices.length,
-              itemBuilder: (context, index) {
-                String noticeContent = notices[index]['content'];
-
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 2.0),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardBGColor,
-                    borderRadius: BorderRadius.circular(6.0),
-                  ),
-                  child: ListTile(
-                    title: Text(noticeContent, style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12.0,),),
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      ),
-    ),
-
-    SizedBox(
-      child: Center(
-        child: Text("Home Page", textAlign: TextAlign.center),
-      ),
-    ),
-
-    SizedBox(
-      child: Center(
-        child: Text("Add Users", textAlign: TextAlign.center),
-      ),
-    ),
-
-    SizedBox(
-      child: Center(
-        child: Text("Search Page", textAlign: TextAlign.center),
-      ),
-    ),
-
-    HandleUserAuth(),
-
+    showAssignments(),
+    AddNotifications(),
   ];
 
 

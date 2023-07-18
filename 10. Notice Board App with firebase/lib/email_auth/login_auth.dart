@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:app/colors/colors.dart';
+import 'package:app/email_auth/signup_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -123,25 +126,25 @@ class _LoginControllerState extends State<LoginController> {
                                ),
                              ),
                            ),
-                           // const SizedBox(height: 30.0),
-                           // InkWell(
-                           //   onTap: () {
-                           //     Timer(const Duration(milliseconds: 750), (){
-                           //       Navigator.push(context, MaterialPageRoute(
-                           //           builder: (context)=> const SignUpController()));
-                           //     });
-                           //   },
-                           //   splashColor: AppColors.transparent,
-                           //   hoverColor: AppColors.transparent,
-                           //   child: Text(
-                           //     "Create an account?",
-                           //     style: TextStyle(
-                           //       fontStyle: FontStyle.italic,
-                           //       color: AppColors.secondary,
-                           //       fontSize: 12.0,
-                           //     ),
-                           //   ),
-                           // ),
+                           const SizedBox(height: 30.0),
+                           InkWell(
+                             onTap: () {
+                               Timer(const Duration(milliseconds: 750), (){
+                                 Navigator.push(context, MaterialPageRoute(
+                                     builder: (context)=> const SignUpController()));
+                               });
+                             },
+                             splashColor: AppColors.transparent,
+                             hoverColor: AppColors.transparent,
+                             child: Text(
+                               "Create an account?",
+                               style: TextStyle(
+                                 fontStyle: FontStyle.italic,
+                                 color: AppColors.secondary,
+                                 fontSize: 12.0,
+                               ),
+                             ),
+                           ),
                          ],
                        )
                    );

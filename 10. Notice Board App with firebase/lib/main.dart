@@ -2,7 +2,7 @@ import 'package:app/colors/colors.dart';
 import 'package:app/crud_operations/crud_screens.dart';
 import 'package:app/screens/admin_screens/users_model.dart';
 import 'package:app/screens/doo_screen/NotificationModel.dart';
-import 'package:app/screens/fyp_committe_screens/fyp_committee.dart';
+import 'package:app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body: FYPScreen(),
+          body: HomeScreen(),
         ),
       ),
     );
