@@ -1,0 +1,64 @@
+name: handdle
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  firebase_core: ^2.14.0
+  firebase_auth: ^4.6.3
+  cloud_firestore: ^4.8.2
+  firebase_database: ^10.2.3
+  intl: ^0.18.1
+  flutter_sms_autofill: ^1.0.4
+  cached_network_image: ^3.2.3
+  flutter_vector_icons: ^2.0.0
+  icon_forest: ^1.1.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+  pin_code_fields:
+  image_picker:
+  fluttertoast:
+  get:
+
+flutter:
+
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - images/
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins/Poppins-Italic.ttf
+        - asset: assets/fonts/Poppins/Poppins-Regular.ttf
+          style: italic
+
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins/Poppins-Italic.ttf
+        - asset: assets/fonts/Poppins/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins/Poppins-Light.ttf
+          weight: 700
+
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins/Poppins-Bold.ttf
+          weight: 800
+
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins/Poppins-ExtraBold.ttf
+          weight: 900

@@ -1,0 +1,221 @@
+
+class MessageCardToId extends StatelessWidget {
+  const MessageCardToId({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: const BoxDecoration(
+                  color: Color(0xffeaf5fb),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
+                      topLeft: Radius.circular(10))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  const Text(
+                      "The learning is so fast, I even have a\n hard time keeping up with it"),
+                  Text(
+                    "19.59",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: primaryColor,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 5.0,
+                  ),
+                  const Icon(
+                    Icons.done_all,
+                    size: 15.5,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MessageCardFromId extends StatelessWidget {
+  const MessageCardFromId({
+    super.key,
+    required this.messageModel,
+  });
+
+  final MessagesModel messageModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: const BoxDecoration(
+                  color: Color(0xffF4F6F9),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
+                      topRight: Radius.circular(10))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(messageModel.msg.toString()),
+                  const SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    "19.59",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: primaryColor,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 5.0,
+                  ),
+                  const Icon(
+                    Icons.done_all,
+                    size: 15.5,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+StreamBuilder<QuerySnapshot>(
+            stream: APIs.firestore.collection('users').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text('Error retrieving notices');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              List<DocumentSnapshot> usersData = snapshot.data!.docs;
+
+              // fetching the data to show to the console log.
+              // final data = snapshot.data!.docs;
+              //
+              // for (var i in data) {
+              //   log("User Data: ${jsonEncode(i.data())}");
+              // }
+
+              return SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(size.width * 0.05),
+                      child: const Row(
+                        children: [
+                          Text(
+                            'Chats',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: ListTile(
+                        leading: Image.asset("images/archive.png"),
+                        title: const Text(
+                          'Archived',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    Column(
+                      children: usersData.map((doc) {
+                        String userName = doc['name'];
+                        String image = doc['image'];
+                        String about = doc['about'];
+                        String lastActive = doc['lastActive'];
+                        bool isOnline = doc['isOnline'];
+
+                        return Container(
+                          margin: const EdgeInsets.symmetric(vertical: 2.0),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(6.0),
+                          ),
+                          child: ListTile(
+                            onTap: () {
+                              Get.to(
+                                () => Inbox(
+                                  userModel: userList[0],
+                                ),
+                              );
+                            },
+                            leading: APIs.cachedNetworkImage(
+                              context: context,
+                              imageUrl: image,
+                              isOnline: isOnline,
+                            ),
+                            title: Text(
+                              APIs.chooseFirstTwoWords(userName.toString()),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                              ),
+                            ),
+                            subtitle: Text(
+                              APIs.chooseToSplitWords(about, 6),
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            isThreeLine: true,
+                            trailing: Column(
+                              children: [
+                                Text(lastActive),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Image.asset("images/screw.png"),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),

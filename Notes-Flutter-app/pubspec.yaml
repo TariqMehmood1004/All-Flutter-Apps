@@ -1,0 +1,29 @@
+name: notes
+description: This is a app and fabricated from android notes app clone.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.5 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  cloud_firestore: ^4.8.2
+  firebase_core: ^2.14.0
+  firebase_auth: ^4.6.3
+  font_awesome_flutter: ^10.5.0
+  intl: ^0.18.1
+  connectivity: ^3.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/images/
